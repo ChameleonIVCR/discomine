@@ -13,11 +13,13 @@ import java.lang.IllegalStateException;
 
 public class DiscoMine implements DedicatedServerModInitializer {
     private static JDA jda;
-    private static ConfigFile config;
+    private static ConfigFile config = new ConfigFile();
     
     @Override
     public void onInitializeServer() {
-        initialize();
+        if (initialize()){
+
+        }
     }
 
     public static JDA getJda(){
@@ -28,18 +30,21 @@ public class DiscoMine implements DedicatedServerModInitializer {
         return config;
     }
     
-    private static void initialize() {
-        config = new ConfigFile();
+    private static boolean initialize() {
         try {
+            System.out.println("DiscoMine: Attempting to login...");
             jda = JDABuilder.createLight(config.getProperty("botToken")).build().awaitReady();
-        } catch (LoginException e) {
-            System.out.println("The provided");
+            System.out.println("DiscoMine: Logged in.");
+            return true;
+        } catch (LoginException | IllegalArgumentException e) {
+            System.out.println("DiscoMine: The provided Discord bot token is incorrect.");
         } catch (InterruptedException x){
-            
-        } catch (IllegalArgumentException i){
-
+            System.out.println("DiscoMine: The login process was interrupted.");
         } catch (IllegalStateException s){
-
+            System.out.println("DiscoMine: The plugin has shutdown while trying to login.");
         }
+
+        System.out.println("DiscoMine: Aborting...");
+        return false;
     } 
 }
