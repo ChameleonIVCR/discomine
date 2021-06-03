@@ -2,8 +2,8 @@ import java.nio.file.Paths
 
 plugins {
     id 'fabric-loom' version '0.6-SNAPSHOT'
-    id 'maven-publish'
     id 'java'
+    id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
 repositories {
@@ -27,32 +27,27 @@ dependencies {
     minecraft "com.mojang:minecraft:1.16.5"
     mappings "net.fabricmc:yarn:1.16.5+build.9:v2"
     modImplementation "net.fabricmc:fabric-loader:0.11.3"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.34.6+1.16"
 	
     //Discord
-    implementation ('net.dv8tion:JDA:4.2.1_266') {
+    shadow ('net.dv8tion:JDA:4.2.1_266') {
         exclude module: 'opus-java'
     }
 }
 
 processResources {
-	inputs.property "version", project.version
+    inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
 }
 
 java {
-	withSourcesJar()
+    withSourcesJar()
 }
 
-jar {
-    duplicatesStrategy = 'EXCLUDE'
-    manifest {
-        attributes "Main-Class": "me.chame.discomine.DiscoMine"
-    }
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}
+build.dependsOn(shadowJar);
