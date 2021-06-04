@@ -1,10 +1,12 @@
 package me.chame.discomine;
 
 import me.chame.discomine.utils.ConfigFile;
+import me.chame.discomine.discord.Listener;
 
 import net.fabricmc.api.DedicatedServerModInitializer ;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 
 import javax.security.auth.login.LoginException;
 import java.lang.IllegalArgumentException;
@@ -33,7 +35,13 @@ public class DiscoMine implements DedicatedServerModInitializer {
     private static boolean initialize() {
         try {
             System.out.println("DiscoMine: Attempting to login...");
-            jda = JDABuilder.createLight(config.getProperty("botToken")).build().awaitReady();
+
+            JDABuilder builder = JDABuilder.createLight(config.getProperty("botToken"));
+            builder.setActivity(Activity.playing("Minecraft"));
+            builder.addEventListeners(new Listener(config.getProperty("trigger").replaceAll("\\s+", ""), config.getProperty("channelId")));
+
+            jda = builder.build().awaitReady();
+
             System.out.println("DiscoMine: Logged in.");
             return true;
         } catch (LoginException | IllegalArgumentException e) {

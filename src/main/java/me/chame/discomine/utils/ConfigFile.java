@@ -10,6 +10,7 @@ import java.util.HashMap;
  * The ConfigFile class allows to read from .properties files, validate them
  * against the defaults, and regenerate them in case the properties are invalid.
  * The regenerated files are simply unpacked from the .jar assets.
+ * TODO: Add write to file support.
  */
 
 public class ConfigFile {
