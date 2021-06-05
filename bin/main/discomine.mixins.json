@@ -1,0 +1,12 @@
+{
+    "required": true,
+    "package": "me.chame.discomine.minecraft.mixins",
+    "compatibilityLevel": "JAVA_8",
+    "mixins": [
+      "MixinMinecraftServer"
+    ],
+    "injectors": {
+      "defaultRequire": 1
+    },
+    "refmap": "1.16.5-refmap.json"
+  }

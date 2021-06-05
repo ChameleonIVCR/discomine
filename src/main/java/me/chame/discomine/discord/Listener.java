@@ -1,6 +1,8 @@
 package me.chame.discomine.discord;
 
 import me.chame.discomine.DiscoMine;
+import me.chame.discomine.minecraft.MCServer;
+import me.chame.discomine.minecraft.MixinAdapter;
 import me.chame.discomine.discord.DiscordParameters;
 import me.chame.discomine.discord.CommandExecutor;
 
@@ -33,7 +35,10 @@ public class Listener extends ListenerAdapter {
     // Concurrent Executor service. Do we need this?. Using two threads max.
     private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
-    public Listener(String trigger, String channelListenId) {
+    private final MixinAdapter asyncAdapter;
+
+    public Listener(String trigger, String channelListenId, MixinAdapter adapter) {
+        this.asyncAdapter = adapter;
         this.channelListenId = channelListenId;
         this.trigger = trigger;
         // Commands to listen to, these should be updated at CommandExecutor too.
@@ -51,16 +56,24 @@ public class Listener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         // If message is from self, null, deleted author, or is not in the selected
         // channel to listen to, return.
-        if (event.getMember() == null || event.getAuthor().equals(DiscoMine.getJda().getSelfUser())
-                || event.getChannel().getId() != channelListenId)
-            return;
+        System.out.println("MSG: "+event.getMessage().getContentRaw());
+        System.out.println("Trigger: "+this.trigger);
+        System.out.println("Set Channel ID: "+this.channelListenId);
+        System.out.println("Current message channel ID: "+event.getChannel().getId());
+        System.out.println("Is Ready?: "+String.valueOf(this.asyncAdapter.isReady()));
 
+        if (event.getMember() == null || event.getAuthor().equals(DiscoMine.getJda().getSelfUser())
+                || event.getChannel().getId() != this.channelListenId || !this.asyncAdapter.isReady())
+            return;
+        System.out.printf(event.getMessage().getContentRaw());
         Message msg = event.getMessage();
         String msgFirstWord = getFirstWord(msg.getContentRaw().toLowerCase());
 
         for (String command : this.commandList) {
             if (msgFirstWord.equals(command)) {
-                FutureTask<Boolean> task = new FutureTask<>(new CommandExecutor(command.replace(this.trigger, ""), new DiscordParameters(msg, event.getChannel(), event.getGuild(), event.getMember())));
+                System.out.printf(event.getMessage().getContentRaw());
+                FutureTask<Boolean> task = new FutureTask<>(new CommandExecutor(command.replace(this.trigger, ""),
+                        new DiscordParameters(msg, event.getChannel(), event.getGuild(), event.getMember()), this.asyncAdapter.getMinecraftServer()));
 
                 executor.execute(task);
                 return;

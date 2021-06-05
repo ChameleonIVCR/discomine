@@ -1,6 +1,6 @@
 package me.chame.discomine.discord;
 
-import me.chame.discomine.discord.DiscordParameters;
+import me.chame.discomine.minecraft.MCServer;
 
 import java.util.concurrent.Callable;
 
@@ -13,18 +13,21 @@ import java.util.concurrent.Callable;
 public class CommandExecutor implements Callable<Boolean> {
     private final DiscordParameters discordParameters;
     private final String command;
+    private final MCServer server;
 
-    public CommandExecutor(String command, DiscordParameters discordData){
+    public CommandExecutor(String command, DiscordParameters discordData, MCServer server){
         this.discordParameters = discordData;
         this.command = command;
+        this.server = server;
     }
 
     @Override
     public Boolean call() throws Exception{
         switch (command){
             case "list":
-                return true;
+                this.discordParameters.sendMessage(String.join(", ", this.server.getPlayers()));
+                break;
         }
-        return false;
+        return true;
     }
 }

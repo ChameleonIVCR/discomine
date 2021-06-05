@@ -1,4 +1,4 @@
-package me.chame.discomine.utils;
+package me.chame.discomine.discord;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -11,8 +11,7 @@ public class DiscordParameters{
     private final Guild guild;
     private final Member member;
 
-    public DiscordParameters(Message msg, MessageChannel msgch
-                                    , Guild guild, Member member) {
+    public DiscordParameters(Message msg, MessageChannel msgch, Guild guild, Member member) {
         this.msg = msg;
         this.msgch = msgch;
         this.guild = guild;

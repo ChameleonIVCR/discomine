@@ -19,5 +19,7 @@
     ]
   },
   "depends": {},
-  "mixins": []
+  "mixins": [
+    "discomine.mixins.json"
+  ]
 }
