@@ -12,6 +12,9 @@ import javax.security.auth.login.LoginException;
 import java.lang.IllegalArgumentException;
 import java.lang.IllegalStateException;
 
+/**
+ * Main entrypoint for DiscoMine when running on a dedicated server.
+ */
 
 public class DiscoMine implements DedicatedServerModInitializer {
     private static JDA jda;

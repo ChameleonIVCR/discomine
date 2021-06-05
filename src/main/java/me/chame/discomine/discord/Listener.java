@@ -55,7 +55,7 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         // If message is from self, null, deleted author, or is not in the selected
-        // channel to listen to, return.
+        // channel to listen to, return. Also, consult the MixInAdapter to see if ready.
         System.out.println("MSG: "+event.getMessage().getContentRaw());
         System.out.println("Trigger: "+this.trigger);
         System.out.println("Set Channel ID: "+this.channelListenId);
@@ -72,6 +72,7 @@ public class Listener extends ListenerAdapter {
         for (String command : this.commandList) {
             if (msgFirstWord.equals(command)) {
                 System.out.printf(event.getMessage().getContentRaw());
+                //TODO: Do we really need threading?
                 FutureTask<Boolean> task = new FutureTask<>(new CommandExecutor(command.replace(this.trigger, ""),
                         new DiscordParameters(msg, event.getChannel(), event.getGuild(), event.getMember()), this.asyncAdapter.getMinecraftServer()));
 

@@ -1,50 +1,56 @@
 package me.chame.discomine.minecraft;
 
+/**
+ * The MixinAdapter provides a way of communication for the injected methods,
+ * providing static setter methods and non-static getter methods. Another way to
+ * do this is using Events or Observers. TODO: Try other ways of doing this.
+ */
+
 public class MixinAdapter {
     private static boolean serverStarted = false;
     private static boolean serverStopping = false;
     private static boolean serverStopped = false;
     private static MCServer minecraftServer;
 
-    public MixinAdapter(){
+    public MixinAdapter() {
 
     }
 
-    public static void setServerStarted(boolean serverStart){
+    public static void setServerStarted(boolean serverStart) {
         serverStarted = serverStart;
     }
 
-    public boolean getServerStarted(){
+    public boolean getServerStarted() {
         return serverStarted;
     }
 
-    public static void setServerStopping(boolean serverStop){
+    public static void setServerStopping(boolean serverStop) {
         serverStopping = serverStop;
     }
 
-    public boolean getServerStopping(){
+    public boolean getServerStopping() {
         return serverStopping;
     }
 
-    public static void setserverStopped(boolean serverFinalized){
+    public static void setserverStopped(boolean serverFinalized) {
         serverStopped = serverFinalized;
     }
 
-    //Use this to kill JDA
-    public boolean getServerStopped(){
+    // Use this to kill JDA
+    public boolean getServerStopped() {
         return serverStopped;
     }
 
-    public static void setMinecraftServer(MCServer mcServer){
+    public static void setMinecraftServer(MCServer mcServer) {
         minecraftServer = mcServer;
     }
 
-    public MCServer getMinecraftServer(){
+    public MCServer getMinecraftServer() {
         return minecraftServer;
     }
 
-    public boolean isReady(){
-        if(serverStarted && !serverStopping){
+    public boolean isReady() {
+        if (serverStarted && !serverStopping) {
             return true;
         }
         return false;

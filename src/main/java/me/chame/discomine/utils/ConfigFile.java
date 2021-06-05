@@ -61,9 +61,6 @@ public class ConfigFile {
                     return properties;
                 }
             } else {
-                // repeated code because i'm lazy lolmao, also, this returns the
-                // default properties, which will cause the bot to fail login.
-                // TODO: Handle this.
                 FileOutputStream fileos = new FileOutputStream(propertiesFile);
                 defProperties.store(fileos, name + ".properties");
                 fileos.close();

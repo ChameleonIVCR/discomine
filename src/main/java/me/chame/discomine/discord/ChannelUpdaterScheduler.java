@@ -6,19 +6,25 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.Executors;
-//TODO
+
+/**
+ * This class should provide updates to the channel description after a fixed
+ * amount of time, it could also be used to stop JDA after the MixIn call to
+ * setServerStopping().
+ */
+
+// TODO
 public class ChannelUpdaterScheduler {
     public static void beepAfterInterval() {
-        //initialize the scheduler service
+
         final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        //schedule a task to execute after every 5 seconds
+        // Example code.
         final ScheduledFuture<?> beeper = scheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-            // this is just a sample. Any repeatitive task such as connection
-                        // health monitoring can be done here
+
                 System.out.println("Beep");
-    
+
             }
         }, 0, 5, TimeUnit.SECONDS);
     }
