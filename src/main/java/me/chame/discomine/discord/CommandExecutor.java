@@ -5,7 +5,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.concurrent.Callable;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * CommandExecutor handles all the calls to commands from Discord. A new one is
@@ -26,26 +25,32 @@ public class CommandExecutor implements Callable<Boolean> {
     }
 
     @Override
-    public Boolean call() throws Exception {
+    public Boolean call() {
         switch (command) {
-            //TODO:Optimize this and handle exception in case the player list is empty.
+
             case "list":
-                StringBuilder playerlist = new StringBuilder();
-                List<ServerPlayerEntity> list = new ArrayList<>();
-                for (ServerPlayerEntity entity: this.server.getMinecraftServer().getPlayerManager().getPlayerList()){
-                    list.add(entity);
+                List<ServerPlayerEntity> players = this.server.getMinecraftServer().getPlayerManager().getPlayerList();
+
+                if (players.isEmpty()) {
+                    this.discordParameters.sendMessage("There's no one online.");
                 }
-                for (ServerPlayerEntity playerEntity: list){
-                    playerlist.append(playerEntity.getName().getString().replaceAll("§[b0931825467adcfeklmnor]", "").replaceAll("([_`~*>])", "\\\\$1")).append("\n");
+
+                else {
+
+                    StringBuilder playerList = new StringBuilder("Players online:\n");
+
+                    for (ServerPlayerEntity playerEntity : players) {
+                        playerList.append(playerEntity.getName().getString().replaceAll("§[b0931825467adcfeklmnor]", "").replaceAll("([_`~*>|])", "\\\\$1")).append("\n");
+                    }
+
+                    System.out.println(playerList.toString().trim());
+
+                    this.discordParameters.sendMessage(playerList.toString().trim());
+
+                    System.out.println("Sent");
+
+                    break;
                 }
-                if (playerlist.toString().endsWith("\n")) {
-                    int a = playerlist.lastIndexOf("\n");
-                    playerlist = new StringBuilder(playerlist.substring(0, a));
-                }
-                System.out.println(playerlist.toString());
-                this.discordParameters.sendMessage(playerlist.toString());
-                System.out.println("Sent");
-                break;
         }
         return true;
     }
