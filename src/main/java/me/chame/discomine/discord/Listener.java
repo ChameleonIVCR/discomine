@@ -3,8 +3,6 @@ package me.chame.discomine.discord;
 import me.chame.discomine.DiscoMine;
 import me.chame.discomine.minecraft.MCServer;
 import me.chame.discomine.minecraft.MixinAdapter;
-import me.chame.discomine.discord.DiscordParameters;
-import me.chame.discomine.discord.CommandExecutor;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -17,6 +15,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+
+import net.minecraft.server.network.ServerPlayerEntity;
 
 /**
  * The Listener class extends the ListenerAdapter from JDA and is initialized at
@@ -56,25 +56,20 @@ public class Listener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         // If message is from self, null, deleted author, or is not in the selected
         // channel to listen to, return. Also, consult the MixInAdapter to see if ready.
-        System.out.println("MSG: "+event.getMessage().getContentRaw());
-        System.out.println("Trigger: "+this.trigger);
-        System.out.println("Set Channel ID: "+this.channelListenId);
-        System.out.println("Current message channel ID: "+event.getChannel().getId());
-        System.out.println("Is Ready?: "+String.valueOf(this.asyncAdapter.isReady()));
 
         if (event.getMember() == null || event.getAuthor().equals(DiscoMine.getJda().getSelfUser())
-                || event.getChannel().getId() != this.channelListenId || !this.asyncAdapter.isReady())
+                || !event.getChannel().getId().equals(this.channelListenId) || !this.asyncAdapter.isReady())
             return;
-        System.out.printf(event.getMessage().getContentRaw());
+        System.out.println("Checks done.");
         Message msg = event.getMessage();
         String msgFirstWord = getFirstWord(msg.getContentRaw().toLowerCase());
-
+        
         for (String command : this.commandList) {
             if (msgFirstWord.equals(command)) {
-                System.out.printf(event.getMessage().getContentRaw());
-                //TODO: Do we really need threading?
-                FutureTask<Boolean> task = new FutureTask<>(new CommandExecutor(command.replace(this.trigger, ""),
-                        new DiscordParameters(msg, event.getChannel(), event.getGuild(), event.getMember()), this.asyncAdapter.getMinecraftServer()));
+                //TODO: Do we really need threading?, yeah, probably.
+                final DiscordParameters disParam = new DiscordParameters(msg, event.getChannel(), event.getGuild(), event.getMember());
+                disParam.sendTyping();
+                FutureTask<Boolean> task = new FutureTask<>(new CommandExecutor(command.replace(this.trigger, ""), disParam, this.asyncAdapter.getMinecraftServer()));
 
                 executor.execute(task);
                 return;

@@ -42,12 +42,17 @@ processResources {
     }
 }
 
+java {
+    withSourcesJar()
+}
+
 shadowJar {
     configurations = [project.configurations.shadow]
 }
 
-java {
-    withSourcesJar()
+remapJar{
+    dependsOn shadowJar
+    input.set shadowJar.archiveFile.get()
 }
 
 build.dependsOn(shadowJar);

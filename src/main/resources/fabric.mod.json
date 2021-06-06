@@ -5,7 +5,9 @@
   "name": "DiscoMine",
   "description": "Link Minecraft and Discord chat, while using webhooks.",
   "authors": [
-    "Chame"
+    "Chame",
+    "Viruz",
+    "Zonal"
   ],
   "contact": {
     "homepage": "https://discord.gg/Ng6srGptE7",

@@ -24,9 +24,9 @@ public class MCServer {
         return this.minecraftServer.getPlayerManager().getPlayer(playerId).getPlayerListName().getString();
     }
 
-    public String[] getPlayers() {
-        return this.minecraftServer.getPlayerNames();
-    }
+/*     public String[] getPlayers() {
+        return this.minecraftServer.getPlayerManager().getPlayerList()
+    } */
 
     public String getServerIp() {
         return this.minecraftServer.getServerIp() + Integer.toString(this.minecraftServer.getServerPort());

@@ -1,5 +1,7 @@
 package me.chame.discomine.minecraft;
 
+import me.chame.discomine.DiscoMine;
+
 /**
  * The MixinAdapter provides a way of communication for the injected methods,
  * providing static setter methods and non-static getter methods. Another way to
@@ -26,6 +28,8 @@ public class MixinAdapter {
 
     public static void setServerStopping(boolean serverStop) {
         serverStopping = serverStop;
+        //Tell JDA to shutdown.
+        DiscoMine.getJda().shutdownNow();
     }
 
     public boolean getServerStopping() {
@@ -36,7 +40,6 @@ public class MixinAdapter {
         serverStopped = serverFinalized;
     }
 
-    // Use this to kill JDA
     public boolean getServerStopped() {
         return serverStopped;
     }

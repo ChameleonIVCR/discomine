@@ -40,10 +40,14 @@ public class DiscordParameters {
     }
 
     public void sendMessage(String message) {
-        msgch.sendMessage(message).queue();
+        msgch.sendMessage(message).complete();
     }
 
     public void sendMessage(Message message) {
-        msgch.sendMessage(message).queue();
+        msgch.sendMessage(message).complete();
+    }
+
+    public void sendTyping(){
+        msgch.sendTyping();
     }
 }
